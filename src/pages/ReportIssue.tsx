@@ -198,34 +198,43 @@ const ReportIssue = () => {
               <Label htmlFor="location">Location *</Label>
               <div className="relative flex gap-2">
                 <div className="flex-1 relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground z-10 pointer-events-none" />
                   {isLoaded ? (
                     <Autocomplete
                       onLoad={(ac) => (autocompleteRef.current = ac)}
                       onPlaceChanged={() => {
                         const place = autocompleteRef.current?.getPlace();
                         if (!place) return;
-                        const name = place.formatted_address || place.name || formData.location;
+                        const name = place.formatted_address || place.name || "";
                         const loc = place.geometry?.location;
                         if (loc) {
+                          const newLocation = name || "";
                           setFormData({
                             ...formData,
-                            location: name || "",
+                            location: newLocation,
                             lat: String(loc.lat()),
                             lng: String(loc.lng()),
                           });
-                          setLocationInput(name || "");
+                          setLocationInput(newLocation);
                         } else if (name) {
                           setFormData({ ...formData, location: name });
                           setLocationInput(name);
                         }
+                      }}
+                      options={{
+                        types: ['geocode', 'establishment'],
+                        fields: ['formatted_address', 'geometry', 'name']
                       }}
                     >
                       <Input
                         id="location"
                         placeholder="Search address or landmark"
                         value={locationInput}
-                        onChange={(e) => setLocationInput(e.target.value)}
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          setLocationInput(newValue);
+                          setFormData({ ...formData, location: newValue });
+                        }}
                         onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault(); }}
                         autoComplete="off"
                         className="pl-10"
@@ -236,8 +245,12 @@ const ReportIssue = () => {
                     <Input
                       id="location"
                       placeholder="Loading maps..."
-                        value={locationInput}
-                        onChange={(e) => setLocationInput(e.target.value)}
+                      value={locationInput}
+                      onChange={(e) => {
+                        const newValue = e.target.value;
+                        setLocationInput(newValue);
+                        setFormData({ ...formData, location: newValue });
+                      }}
                       className="pl-10"
                       required
                     />
