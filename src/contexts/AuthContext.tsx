@@ -8,6 +8,7 @@ export interface User {
   email: string;
   name: string;
   role: UserRole;
+  points?: number;
   organizationType?: OrganizationType;
   organizationName?: string;
 }
@@ -17,6 +18,7 @@ interface AuthContextType {
   login: (email: string, password: string, role: UserRole, organizationType?: OrganizationType) => Promise<void>;
   logout: () => void;
   isLoading: boolean;
+  updateUserPoints: (pointsToAdd: number) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,6 +60,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       email,
       name: email.split("@")[0],
       role,
+      points: 100, // Initial points
       organizationType: organizationType || null,
       organizationName: organizationType ? `${organizationType.charAt(0).toUpperCase() + organizationType.slice(1)} Organization` : undefined,
     };
@@ -72,11 +75,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     localStorage.removeItem("civic-hub-user");
   };
 
+  const updateUserPoints = (pointsToAdd: number) => {
+    if (user) {
+      const currentPoints = user.points || 0;
+      const updatedUser = {
+        ...user,
+        points: currentPoints + pointsToAdd
+      };
+      setUser(updatedUser);
+      localStorage.setItem("civic-hub-user", JSON.stringify(updatedUser));
+    }
+  };
+
   const value = {
     user,
     login,
     logout,
     isLoading,
+    updateUserPoints,
   };
 
   return (

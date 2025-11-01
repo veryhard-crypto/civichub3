@@ -3,8 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { MapPin, Users, Award, TrendingUp, Calendar, AlertCircle, Heart } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { useStatistics } from "@/hooks/use-statistics";
 
 const Home = () => {
+  // Use the statistics hook to get real-time data
+  const { statistics, isLoading } = useStatistics();
+
   const features = [
     {
       icon: MapPin,
@@ -32,11 +36,16 @@ const Home = () => {
     },
   ];
 
+  // Format numbers with commas
+  const formatNumber = (num: number): string => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   const stats = [
-    { label: "Active Citizens", value: "2,547", icon: Users },
-    { label: "Events Completed", value: "342", icon: Calendar },
-    { label: "Issues Resolved", value: "1,289", icon: AlertCircle },
-    { label: "NGOs Partnered", value: "23", icon: Heart },
+    { label: "Active Citizens", value: formatNumber(statistics.activeCitizens), icon: Users },
+    { label: "Events Completed", value: formatNumber(statistics.eventsCompleted), icon: Calendar },
+    { label: "Issues Resolved", value: formatNumber(statistics.issuesResolved), icon: AlertCircle },
+    { label: "NGOs Partnered", value: formatNumber(statistics.ngosPartnered), icon: Heart },
   ];
 
   return (

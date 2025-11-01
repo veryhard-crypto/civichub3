@@ -1,18 +1,28 @@
-﻿import express from "express";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import cors from "cors";
-import morgan from "morgan";
-import issuesRouter from "./routes/issues.js";
-import path from "path";
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import morgan from 'morgan';
+import path from 'path';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+
+import issuesRouter from './routes/issues.js';
+import statsRouter from './routes/stats.js';
+import contributionsRouter from './routes/contributions.js';
 
 dotenv.config();
+
+// ES modules fix for __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 app.use("/api/issues", issuesRouter);
+app.use("/api/stats", statsRouter);
+app.use("/api", contributionsRouter);
 // serve uploaded files
 app.use("/uploads", express.static(path.resolve(process.cwd(), "uploads")));
 

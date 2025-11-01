@@ -9,7 +9,6 @@ const Navbar = () => {
   
   const navItems = [
     { path: "/", icon: Home, label: "Home" },
-    { path: "/map", icon: MapPin, label: "Map" },
     { path: "/events", icon: Calendar, label: "Events" },
     { path: "/issues", icon: AlertCircle, label: "Issues" },
     { path: "/report", icon: AlertCircle, label: "Report Issue" },

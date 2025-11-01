@@ -16,9 +16,23 @@ import {
   Settings
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import { useAuth } from "@/contexts/AuthContext";
+import RewardContribution from "@/components/RewardContribution";
 
 const Profile = () => {
-  const userData = {
+  const { user } = useAuth();
+  
+  const userData = user ? {
+    name: user.name,
+    role: user.role === "reporter" ? "Citizen" : user.role === "solver" ? user.organizationType || "Solver" : "Citizen",
+    joinedDate: "March 2024",
+    points: user.points || 100,
+    level: 5,
+    nextLevel: 500,
+    eventsJoined: 12,
+    issuesReported: 8,
+    impactScore: 87,
+  } : {
     name: "Alex Johnson",
     role: "Citizen",
     joinedDate: "March 2024",
@@ -39,13 +53,20 @@ const Profile = () => {
     { id: 6, name: "Street Guardian", icon: "🛡️", description: "Fixed 20 street issues", earned: false },
   ];
 
+  // Keep recent activities the same regardless of login status
   const recentActivities = [
     { id: 1, type: "event", title: "Community Cleanup Drive", date: "2 days ago", points: 50 },
     { id: 2, type: "issue", title: "Reported broken street light", date: "5 days ago", points: 25 },
     { id: 3, type: "event", title: "Tree Plantation Drive", date: "1 week ago", points: 75 },
   ];
 
-  const leaderboard = [
+  const leaderboard = user ? [
+    { rank: 1, name: user.name, points: 892, isCurrentUser: true },
+    { rank: 2, name: "Community Member", points: 756 },
+    { rank: 3, name: "Community Member", points: 485 },
+    { rank: 4, name: "Community Member", points: 423 },
+    { rank: 5, name: "Community Member", points: 387 },
+  ] : [
     { rank: 1, name: "Sarah Miller", points: 892 },
     { rank: 2, name: "Mike Chen", points: 756 },
     { rank: 3, name: "Alex Johnson", points: 485, isCurrentUser: true },
@@ -224,6 +245,9 @@ const Profile = () => {
                 ))}
               </div>
             </Card>
+
+            {/* Contribution Rewards */}
+            <RewardContribution />
 
             {/* Leaderboard */}
             <Card className="p-6">
