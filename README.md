@@ -93,22 +93,25 @@ A civic engagement platform where citizens can report local issues, track them o
 
 6. **Run the application**
 
-   **Option 1: Two Terminal Windows (Recommended)**
+   **Two Terminal Windows Method (Recommended)**
    
    Open two terminal windows:
-
+   
    **Terminal 1 - Backend Server:**
    ```bash
    cd server
-   npm run dev
+   npm start
    ```
    Server will start on http://localhost:5000
    
-   **Terminal 2 - Frontend (in project root):**
+   **Terminal 2 - Frontend Development Server:**
    ```bash
    npm run dev
    ```
-   App will start on http://localhost:8080
+   
+   The application will be available at:
+   - Frontend: http://localhost:8080
+   - Backend API: http://localhost:5000
 
    **Option 2: One Terminal with Background Jobs (Mac/Linux)**
    ```bash
